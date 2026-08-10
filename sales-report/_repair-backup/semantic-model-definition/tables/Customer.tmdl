@@ -1,0 +1,67 @@
+/// Customer dimension with one row per customer.
+table Customer
+	lineageTag: 821b667b-4e61-41e3-9145-feccd56dd366
+
+	/// Unique customer identifier.
+	column CustomerKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 3fd814ba-b46f-4be5-8791-b035afddd0df
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	/// Customer display name.
+	column CustomerName
+		dataType: string
+		isNullable: false
+		lineageTag: 77823770-1cce-47ce-b282-1088f73c512c
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+	/// Customer business segment.
+	column Segment
+		dataType: string
+		isNullable: false
+		lineageTag: 5cb8873e-dcdc-4fb4-9a1d-2bafae42ab36
+		summarizeBy: none
+		sourceColumn: Segment
+
+	/// Customer country.
+	column Country
+		dataType: string
+		isNullable: false
+		lineageTag: 8f3dc71d-2ec4-4225-8102-57b2306a9068
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+	/// Customer city.
+	column City
+		dataType: string
+		isNullable: false
+		lineageTag: db2fd746-c26a-4658-8ddd-134cd368798f
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+	/// Date the customer relationship began.
+	column CustomerSince
+		dataType: dateTime
+		isNullable: false
+		formatString: yyyy-MM-dd
+		lineageTag: b2ce88e0-ea71-4aa5-82aa-9f9bfd99e34a
+		summarizeBy: none
+		sourceColumn: CustomerSince
+
+	partition Customer = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\temp\pb\PowerBICodex\data\power_bi_model_data.xlsx"), null, true),
+				    Data = Source{[Item="tblCustomer", Kind="Table"]}[Data],
+				    Typed = Table.TransformColumnTypes(Data, {{"CustomerKey", Int64.Type}, {"CustomerName", type text}, {"Segment", type text}, {"Country", type text}, {"City", type text}, {"CustomerSince", type date}})
+				in
+				    Typed
+

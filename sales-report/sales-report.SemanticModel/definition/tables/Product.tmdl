@@ -1,0 +1,75 @@
+/// Product dimension with one row per product.
+table Product
+	lineageTag: 947961d9-a61f-4a49-bbe8-776538bfe7ff
+
+	/// Unique product identifier.
+	column ProductKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 24984f09-4dc8-4daa-ac5b-0d1e3e3e3880
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+	/// Product business code.
+	column ProductCode
+		dataType: string
+		isNullable: false
+		lineageTag: fd5cecb4-081e-4fb1-bb61-b1eb73714543
+		summarizeBy: none
+		sourceColumn: ProductCode
+
+	/// Product display name.
+	column ProductName
+		dataType: string
+		isNullable: false
+		lineageTag: 048356e2-faef-4492-9f66-2c0f274e3cc0
+		summarizeBy: none
+		sourceColumn: ProductName
+
+	/// High-level product category.
+	column Category
+		dataType: string
+		isNullable: false
+		lineageTag: 5e868ab1-7afb-451b-a79d-566c328af3dd
+		summarizeBy: none
+		sourceColumn: Category
+
+	/// Product subcategory.
+	column Subcategory
+		dataType: string
+		isNullable: false
+		lineageTag: 4217b898-f558-4bea-9ea2-adc2f2adfabc
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+	/// Standard unit cost used for gross-cost calculations.
+	column UnitCost
+		dataType: decimal
+		isHidden
+		isNullable: false
+		formatString: € #,##0.00
+		lineageTag: 96eaf53a-30ac-4108-8b0f-6f3d5efaaa93
+		summarizeBy: sum
+		sourceColumn: UnitCost
+
+	/// Product list price.
+	column ListPrice
+		dataType: decimal
+		isNullable: false
+		formatString: € #,##0.00
+		lineageTag: 00317f68-7a1a-4bbc-9e44-e3864bf37449
+		summarizeBy: sum
+		sourceColumn: ListPrice
+
+	partition Product = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\temp\pb\PowerBICodex\data\power_bi_model_data.xlsx"), null, true),
+				    Data = Source{[Item="tblProduct", Kind="Table"]}[Data],
+				    Typed = Table.TransformColumnTypes(Data, {{"ProductKey", Int64.Type}, {"ProductCode", type text}, {"ProductName", type text}, {"Category", type text}, {"Subcategory", type text}, {"UnitCost", Currency.Type}, {"ListPrice", Currency.Type}})
+				in
+				    Typed
+

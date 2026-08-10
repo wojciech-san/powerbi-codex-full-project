@@ -1,0 +1,220 @@
+/// Sales transaction lines at one row per sold product line.
+table Sales
+	lineageTag: 5a793a6b-49fc-49c2-bd34-aced8a3b5634
+
+	/// Total sales value after line-level discounts.
+	measure 'Sales Amount' = SUM ( 'Sales'[SalesAmount] )
+		formatString: € #,##0.00
+		displayFolder: 01 Sales
+		lineageTag: f789bf0c-687e-4593-94e3-9e4f5b2d9d35
+
+	/// Total units sold.
+	measure 'Total Quantity' = SUM ( 'Sales'[Quantity] )
+		formatString: #,##0
+		displayFolder: 01 Sales
+		lineageTag: d1884e8b-9021-45ab-b464-1a03816acb34
+
+	/// Average sales value per distinct order.
+	measure 'Average Order Value' = DIVIDE ( [Sales Amount], DISTINCTCOUNT ( 'Sales'[OrderID] ) )
+		formatString: € #,##0.00
+		displayFolder: 01 Sales
+		lineageTag: 05c001cf-f91f-4f31-87e1-034dfbaf4aa6
+
+	/// Number of distinct orders.
+	measure 'Order Count' = DISTINCTCOUNT ( 'Sales'[OrderID] )
+		formatString: #,##0
+		displayFolder: 01 Sales
+		lineageTag: 4e7396c4-bb33-450c-a056-8e610c284f2d
+
+	/// Average realized sales amount per unit sold.
+	measure 'Average Selling Price' = DIVIDE ( [Sales Amount], [Total Quantity] )
+		formatString: € #,##0.00
+		displayFolder: 01 Sales
+		lineageTag: b179c501-3bf9-46e7-82ca-951b8424cfca
+
+	/// Extended product unit cost across sales lines.
+	measure 'Gross Cost' = SUMX ( 'Sales', 'Sales'[Quantity] * RELATED ( 'Product'[UnitCost] ) )
+		formatString: € #,##0.00
+		displayFolder: 02 Profitability
+		lineageTag: a67ff524-5c23-4c5d-8543-6dadf6f0aa73
+
+	/// Sales amount less gross cost.
+	measure 'Gross Profit' = [Sales Amount] - [Gross Cost]
+		formatString: € #,##0.00
+		displayFolder: 02 Profitability
+		lineageTag: cb370dcf-8d3d-4669-a79e-cf8de66b59e7
+
+	/// Gross profit as a percentage of sales amount.
+	measure 'Gross Margin %' = DIVIDE ( [Gross Profit], [Sales Amount] )
+		formatString: 0.00%
+		displayFolder: 02 Profitability
+		lineageTag: 155d1943-8eb2-4543-9966-22c3d2ffc533
+
+	/// Gross sales before discount less sales amount after discount.
+	measure 'Discount Amount' = SUMX ( 'Sales', 'Sales'[Quantity] * 'Sales'[UnitPrice] ) - [Sales Amount]
+		formatString: € #,##0.00
+		displayFolder: 03 Discounts
+		lineageTag: b334dd51-8a78-4db4-92c3-1c674b4ecf66
+
+	/// Discount amount as a percentage of gross sales before discount.
+	measure 'Average Discount %' = DIVIDE ( [Discount Amount], [Sales Amount] + [Discount Amount] )
+		formatString: 0.00%
+		displayFolder: 03 Discounts
+		lineageTag: 3db1161e-2f05-44f1-901a-515c0ac83310
+
+	/// Sales amount from the start of the current year through the active date context.
+	measure 'Sales Amount YTD' = TOTALYTD ( [Sales Amount], 'Calendar'[Date] )
+		formatString: € #,##0.00
+		displayFolder: 04 Time Intelligence
+		lineageTag: fc3f8c6b-5214-450b-be1b-ce19ad27b7ed
+
+	/// Sales amount for the corresponding prior-year date context.
+	measure 'Sales Amount Previous Year' = CALCULATE ( [Sales Amount], SAMEPERIODLASTYEAR ( 'Calendar'[Date] ) )
+		formatString: € #,##0.00
+		displayFolder: 04 Time Intelligence
+		lineageTag: 84a452b5-c455-4b1a-8f01-db4fc092e54e
+
+	/// Current sales amount less sales amount for the corresponding prior-year period.
+	measure 'Sales Amount YoY' =
+			VAR _previousYear = [Sales Amount Previous Year]
+			RETURN
+			    IF ( ISBLANK ( _previousYear ), BLANK (), [Sales Amount] - _previousYear )
+		formatString: € #,##0.00
+		displayFolder: 04 Time Intelligence
+		lineageTag: a8905943-b08d-4be4-915f-84e870101fc7
+
+	/// Year-over-year sales change divided by prior-year sales.
+	measure 'Sales Amount YoY %' = DIVIDE ( [Sales Amount YoY], [Sales Amount Previous Year] )
+		formatString: 0.00%
+		displayFolder: 04 Time Intelligence
+		lineageTag: 54ccb9f1-88f7-4a30-b010-6b3614a7abb5
+
+	/// Sales amount for the corresponding previous-month date context.
+	measure 'Sales Amount Previous Month' = CALCULATE ( [Sales Amount], DATEADD ( 'Calendar'[Date], -1, MONTH ) )
+		formatString: € #,##0.00
+		displayFolder: 04 Time Intelligence
+		lineageTag: 6366c4d2-3e47-49dd-bf0a-2d849666fc93
+
+	/// Current sales amount less sales amount for the corresponding previous-month period.
+	measure 'Sales Amount MoM' =
+			VAR _previousMonth = [Sales Amount Previous Month]
+			RETURN
+			    IF ( ISBLANK ( _previousMonth ), BLANK (), [Sales Amount] - _previousMonth )
+		formatString: € #,##0.00
+		displayFolder: 04 Time Intelligence
+		lineageTag: 626c3284-3e19-4647-b0eb-bcf5a1c1adab
+
+	/// Month-over-month sales change divided by previous-month sales.
+	measure 'Sales Amount MoM %' = DIVIDE ( [Sales Amount MoM], [Sales Amount Previous Month] )
+		formatString: 0.00%
+		displayFolder: 04 Time Intelligence
+		lineageTag: 9de5951d-f80a-46b9-9511-08447a8818da
+
+	/// Unique sales line identifier.
+	column SalesKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: e60a3938-7e48-4e2d-96dd-72c6a3491fd5
+		summarizeBy: none
+		sourceColumn: SalesKey
+
+	/// Order identifier shared by order lines.
+	column OrderID
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 4b720ab0-fa71-4069-809a-d907328cb7e7
+		summarizeBy: none
+		sourceColumn: OrderID
+
+	/// Date of the order; relates to Calendar[Date].
+	column OrderDate
+		dataType: dateTime
+		isHidden
+		isNullable: false
+		formatString: yyyy-MM-dd
+		lineageTag: ac37c69c-93b2-44d2-93cd-38ca558592f4
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+	/// Customer relationship key.
+	column CustomerKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 0e702ecd-0059-4e5a-9ece-5ce1ce2638c2
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	/// Product relationship key.
+	column ProductKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 3d1d87f3-aaf9-42ed-abb9-94611a87d769
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+	/// Units sold on the line.
+	column Quantity
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: #,##0
+		lineageTag: 11dc6a96-b428-4b79-9e93-3b7feae9b03e
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+	/// Unit price before discount.
+	column UnitPrice
+		dataType: decimal
+		isHidden
+		isNullable: false
+		formatString: € #,##0.00
+		lineageTag: 630ee0c5-4d7d-4929-9331-8ce232dce1e7
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+	/// Discount rate applied to the line.
+	column DiscountPct
+		dataType: decimal
+		isHidden
+		isNullable: false
+		formatString: 0.00%
+		lineageTag: 6c64ee4f-48f9-4951-a8cf-50e2cc71bff4
+		summarizeBy: none
+		sourceColumn: DiscountPct
+
+	/// Sales value after discount.
+	column SalesAmount
+		dataType: decimal
+		isHidden
+		isNullable: false
+		formatString: € #,##0.00
+		lineageTag: 79533e09-eaa1-468b-8f7c-9916c535f05a
+		summarizeBy: sum
+		sourceColumn: SalesAmount
+
+	/// Commercial sales channel.
+	column Channel
+		dataType: string
+		isNullable: false
+		lineageTag: cdf0ce2f-190a-45b2-9b4a-1c9c284771fa
+		summarizeBy: none
+		sourceColumn: Channel
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\temp\pb\PowerBICodex\data\power_bi_model_data.xlsx"), null, true),
+				    Data = Source{[Item="tblSales", Kind="Table"]}[Data],
+				    Typed = Table.TransformColumnTypes(Data, {{"SalesKey", Int64.Type}, {"OrderID", Int64.Type}, {"OrderDate", type date}, {"CustomerKey", Int64.Type}, {"ProductKey", Int64.Type}, {"Quantity", Int64.Type}, {"UnitPrice", Currency.Type}, {"DiscountPct", Currency.Type}, {"SalesAmount", Currency.Type}, {"Channel", type text}})
+				in
+				    Typed
+

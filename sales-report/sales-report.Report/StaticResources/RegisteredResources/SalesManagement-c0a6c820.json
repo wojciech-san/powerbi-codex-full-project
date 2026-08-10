@@ -1,0 +1,46 @@
+{
+  "name": "SalesManagement-c0a6c820.json",
+  "dataColors": [
+    "#00A6C8",
+    "#2D7F8C",
+    "#168C7A",
+    "#D99A2B",
+    "#486581",
+    "#6D5B97",
+    "#64748B",
+    "#C94C4C"
+  ],
+  "good": "#168C7A",
+  "neutral": "#D99A2B",
+  "bad": "#C94C4C",
+  "maximum": "#00A6C8",
+  "center": "#D99A2B",
+  "minimum": "#DDF6FA",
+  "null": "#CBD5E1",
+  "foreground": "#1E293B",
+  "foregroundNeutralSecondary": "#475569",
+  "background": "#F8FAFC",
+  "tableAccent": "#00A6C8",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#1E293B"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 11,
+      "color": "#1E293B"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 9,
+      "color": "#475569"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 24,
+      "color": "#1E293B"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+relationship Sales_Customer
+	fromColumn: Sales.CustomerKey
+	toColumn: Customer.CustomerKey
+
+relationship Sales_Product
+	fromColumn: Sales.ProductKey
+	toColumn: Product.ProductKey
+
+relationship Sales_Calendar
+	fromColumn: Sales.OrderDate
+	toColumn: Calendar.Date
+

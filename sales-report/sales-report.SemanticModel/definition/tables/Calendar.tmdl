@@ -1,0 +1,99 @@
+/// Continuous daily calendar covering 2025 through 2026.
+table Calendar
+	lineageTag: 89259b51-79a6-433d-98f6-dfdd2503c361
+	dataCategory: Time
+
+	/// Continuous calendar date used for relationships and time intelligence.
+	column Date
+		dataType: dateTime
+		isUnique
+		isNullable: false
+		formatString: yyyy-MM-dd
+		lineageTag: 88d9bb78-13ed-4e1d-8942-b0d139e4911a
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Numeric date key in YYYYMMDD form.
+	column DateKey
+		dataType: int64
+		isHidden
+		isNullable: false
+		isAvailableInMdx: false
+		lineageTag: 9de59da9-41d9-4c26-b872-d8d91f657033
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	/// Calendar year.
+	column Year
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 824ab4fb-752d-4b56-b3f6-4c4c4bc07e2d
+		summarizeBy: none
+		sourceColumn: Year
+
+	/// Month number used to sort MonthName.
+	column MonthNumber
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: 2f3130b0-f38b-4596-adf8-10155acfc593
+		summarizeBy: none
+		sourceColumn: MonthNumber
+
+	/// Calendar month name sorted chronologically.
+	column MonthName
+		dataType: string
+		isNullable: false
+		lineageTag: a0832f98-19f8-4ff6-add8-7c5e5f7ea9d3
+		summarizeBy: none
+		sourceColumn: MonthName
+		sortByColumn: MonthNumber
+
+	/// Calendar quarter number.
+	column Quarter
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 61fb63c1-0552-481e-bebf-6c364309780b
+		summarizeBy: none
+		sourceColumn: Quarter
+
+	/// ISO week number.
+	column ISOWeek
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: da2c26dc-e160-484d-94a5-21bb6b277baa
+		summarizeBy: none
+		sourceColumn: ISOWeek
+
+	/// Day-of-week name.
+	column DayName
+		dataType: string
+		isNullable: false
+		lineageTag: d4361718-8ce0-492c-8b5c-2e0c62343eb9
+		summarizeBy: none
+		sourceColumn: DayName
+
+	/// 1 for weekend dates and 0 otherwise.
+	column IsWeekend
+		dataType: int64
+		isNullable: false
+		formatString: 0
+		lineageTag: 3a64acfb-9f4b-4c14-98df-66d2792e554b
+		summarizeBy: none
+		sourceColumn: IsWeekend
+
+	partition Calendar = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\temp\pb\PowerBICodex\data\power_bi_model_data.xlsx"), null, true),
+				    Data = Source{[Item="tblCalendar", Kind="Table"]}[Data],
+				    Typed = Table.TransformColumnTypes(Data, {{"Date", type date}, {"DateKey", Int64.Type}, {"Year", Int64.Type}, {"MonthNumber", Int64.Type}, {"MonthName", type text}, {"Quarter", Int64.Type}, {"ISOWeek", Int64.Type}, {"DayName", type text}, {"IsWeekend", Int64.Type}})
+				in
+				    Typed
+

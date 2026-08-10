@@ -1,0 +1,165 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "6b8bdf604cd124a6c3db",
+  "displayName": "Trends and Discounts",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#EEF2F5'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#D8E0E7'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "60358c50bd45dd8ebeda",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "ca40815cd4a6963832a1",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "40cc35fb9ec8f1b02962",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "fe73e3ba9aff7d3d11db",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "891af20829e2abd706e2",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "9a025d016f9aaa90ba48",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "ac7b091fb23e0acd4e9e",
+      "target": "15afc9431eefad062ef1",
+      "type": "DataFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "60358c50bd45dd8ebeda",
+      "type": "DataFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "ca40815cd4a6963832a1",
+      "type": "DataFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "40cc35fb9ec8f1b02962",
+      "type": "DataFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "fe73e3ba9aff7d3d11db",
+      "type": "DataFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "ac7b091fb23e0acd4e9e",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "9a025d016f9aaa90ba48",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "891af20829e2abd706e2",
+      "target": "15afc9431eefad062ef1",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "60358c50bd45dd8ebeda",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "ca40815cd4a6963832a1",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "40cc35fb9ec8f1b02962",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "fe73e3ba9aff7d3d11db",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "ac7b091fb23e0acd4e9e",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "891af20829e2abd706e2",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "9a025d016f9aaa90ba48",
+      "target": "15afc9431eefad062ef1",
+      "type": "DataFilter"
+    }
+  ]
+}
